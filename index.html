@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N.I.U.S.</title>
+    <title>N.I.U.S. | Daily Brief</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --vp-c-bg: #ffffff; --vp-c-bg-soft: #f6f6f7; --vp-c-bg-mute: #f1f1f2;
-            --vp-c-text-1: #2c3e50; --vp-c-text-2: #476582; --vp-c-brand: #3eaf7c;
-            --vp-c-border: #e2e2e3; --vp-nav-height: 64px;
+        :root { 
+            --vp-c-bg: #ffffff; --vp-c-bg-soft: #f6f6f7; --vp-c-bg-mute: #f1f1f2; 
+            --vp-c-text-1: #2c3e50; --vp-c-text-2: #476582; --vp-c-brand: #3eaf7c; 
+            --vp-c-border: #e2e2e3; --vp-nav-height: 64px; 
         }
-        html.dark {
-            --vp-c-bg: #1b1b1f; --vp-c-bg-soft: #242429; --vp-c-bg-mute: #2e2e32;
-            --vp-c-text-1: rgba(255, 255, 255, 0.87); --vp-c-text-2: rgba(235, 235, 235, 0.6);
-            --vp-c-border: #2e2e32;
+        html.dark { 
+            --vp-c-bg: #1b1b1f; --vp-c-bg-soft: #242429; --vp-c-bg-mute: #2e2e32; 
+            --vp-c-text-1: rgba(255, 255, 255, 0.87); --vp-c-text-2: rgba(235, 235, 235, 0.6); 
+            --vp-c-border: #2e2e32; 
         }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--vp-c-bg); color: var(--vp-c-text-1);
-            margin: 0; -webkit-font-smoothing: antialiased;
-        }
-
-        /* Navigation */
-        .VPNav {
-            position: fixed; top: 0; left: 0; width: 100%; height: var(--vp-nav-height);
-            background-color: var(--vp-c-bg); border-bottom: 1px solid var(--vp-c-border);
-            z-index: 100; backdrop-filter: blur(8px); display: flex; align-items: center;
-        }
-        .VPNavBar {
-            width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 32px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--vp-c-bg); color: var(--vp-c-text-1); margin: 0; -webkit-font-smoothing: antialiased; }
+        
+        /* Fixed Navigation */
+        .VPNav { position: fixed; top: 0; left: 0; width: 100%; height: var(--vp-nav-height); background-color: var(--vp-c-bg); border-bottom: 1px solid var(--vp-c-border); z-index: 1000; backdrop-filter: blur(8px); display: flex; align-items: center; }
+        .VPNavBar { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
         .logo-main { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--vp-c-text-1); text-decoration: none; }
         .nav-center { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 13px; color: var(--vp-c-text-2); text-transform: lowercase; }
         
-        /* Pulse */
         .pulse { width: 8px; height: 8px; background: var(--vp-c-brand); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(62, 175, 124, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(62, 175, 124, 0); } 100% { box-shadow: 0 0 0 0 rgba(62, 175, 124, 0); } }
-
-        /* Toggle */
+        
         .appearance { cursor: pointer; background: var(--vp-c-bg-mute); border-radius: 20px; width: 40px; height: 22px; position: relative; border: 1px solid var(--vp-c-border); }
         .appearance-check { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 1px; left: 1px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         html.dark .appearance-check { left: 19px; background: #000; }
@@ -49,26 +36,29 @@
         html.dark .vpi-sun { display: none; }
         html:not(.dark) .vpi-moon { display: none; }
 
-        /* Grid */
-        .container { max-width: 1152px; margin: 100px auto; padding: 0 24px; }
-        .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        /* Main Layout */
+        .container { max-width: 1152px; margin: 100px auto 40px; padding: 0 24px; }
         
-        .box {
-            display: flex; flex-direction: column; height: 100%;
-            padding: 24px; border-radius: 12px; border: 1px solid var(--vp-c-bg-soft);
-            background-color: var(--vp-c-bg-soft); transition: border-color 0.25s, background-color 0.25s;
-        }
+        /* Date Header Styles */
+        .date-header { border-bottom: 1px solid var(--vp-c-border); padding-bottom: 12px; margin-bottom: 32px; }
+        .date-label { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+        .date-sub { font-size: 14px; color: var(--vp-c-text-2); font-weight: 500; margin-top: 4px; }
+
+        /* Grid - Fixed Overlap */
+        .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+        .box { display: flex; flex-direction: column; height: 100%; padding: 24px; border-radius: 12px; border: 1px solid var(--vp-c-bg-soft); background-color: var(--vp-c-bg-soft); transition: border-color 0.25s; }
         .box:hover { border-color: var(--vp-c-brand); }
-        .title { line-height: 24px; font-size: 16px; font-weight: 600; margin: 0 0 8px; }
-        .details { flex-grow: 1; line-height: 24px; font-size: 14px; font-weight: 500; color: var(--vp-c-text-2); margin-bottom: 20px; }
-        .VPLink { font-size: 12px; font-weight: 600; color: var(--vp-c-brand); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+        .title { line-height: 1.4; font-size: 18px; font-weight: 700; margin: 0 0 12px; }
+        .details { flex-grow: 1; line-height: 1.6; font-size: 14px; color: var(--vp-c-text-2); margin-bottom: 20px; }
+        .VPLink { font-size: 13px; font-weight: 600; color: var(--vp-c-brand); text-decoration: none; display: flex; align-items: center; gap: 6px; }
         .link-icon { width: 14px; height: 14px; }
         b { color: var(--vp-c-text-1); font-weight: 700; }
 
         @media (max-width: 768px) {
             .nav-center { display: none; }
-            .VPNavBar { padding: 0 24px; }
-            .container { padding: 0 16px; margin-top: 80px; }
+            .container { margin-top: 80px; padding: 0 16px; }
+            .items { grid-template-columns: 1fr; gap: 16px; }
+            .date-label { font-size: 20px; }
         }
     </style>
 </head>
@@ -84,47 +74,51 @@
     </header>
 
     <main class="container">
+        <header class="date-header">
+            <div class="date-label">January 03, 2026</div>
+            <div class="date-sub">Intelligence Report</div>
+        </header>
         <div class="items">
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">India orders Musk’s X to fix Grok over ‘obscene’ AI content</h2>
                 <p class="details">India's IT ministry has given X 72 hours to submit an action-taken report.</p>
-                <a href="https://techcrunch.com/2026/01/02/india-orders-musks-x-to-fix-grok-over-obscene-ai-content/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/india-orders-musks-x-to-fix-grok-over-obscene-ai-content/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div>
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">10 useful gadgets for your first apartment</h2>
                 <p class="details">From home security systems and smart smoke detectors to a sunrise alarm gently that wakes you up, here are the must-have gadgets for living in your first apartment.</p>
-                <a href="https://techcrunch.com/2026/01/02/10-useful-gadgets-for-your-first-apartment/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/10-useful-gadgets-for-your-first-apartment/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div>
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">Tesla annual sales decline 9% as it’s overtaken by BYD as global EV leader</h2>
                 <p class="details"><b>Tesla</b> annual sales have fallen for the second year in a row, a drop fueled by the removal of the federal tax credit in the U.S. and competition from Chinese automakers.</p>
-                <a href="https://techcrunch.com/2026/01/02/tesla-annual-sales-decline-9-as-its-overtaken-by-byd-as-global-ev-leader/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/tesla-annual-sales-decline-9-as-its-overtaken-by-byd-as-global-ev-leader/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div>
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">Nvidia’s AI empire: A look at its top startup investments</h2>
                 <p class="details">Over the last two years, <b>Nvidia</b> has used its ballooning fortunes to invest in over 100 <b>AI</b> startups. Here are the giant semiconductor's largest investments.</p>
-                <a href="https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div>
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">The 16 top logistics, manufacturing, materials startups from Disrupt Startup Battlefield</h2>
                 <p class="details">Here is the full list of the logistics, manufacturing, and materials Startup Battlefield 200 selectees, along with a note on what made us select them for the competition.</p>
-                <a href="https://techcrunch.com/2026/01/02/the-16-top-logistics-manufacturing-materials-startups-from-disrupt-startup-battlefield/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/the-16-top-logistics-manufacturing-materials-startups-from-disrupt-startup-battlefield/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div>
         <div class="VPFeature">
             <article class="box">
                 <h2 class="title">Pebble reboots its thinnest smartwatch with the Pebble Round 2</h2>
                 <p class="details">Pebble launches a $199 smartwatch with rounded screen that can last up to 2 weeks on one charge.</p>
-                <a href="https://techcrunch.com/2026/01/02/pebble-reboots-its-thinnest-smartwatch-with-the-pebble-round-2/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open Source</a>
+                <a href="https://techcrunch.com/2026/01/02/pebble-reboots-its-thinnest-smartwatch-with-the-pebble-round-2/" target="_blank" class="VPLink link"><svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> View Source</a>
             </article>
         </div></div>
     </main>
