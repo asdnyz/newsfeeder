@@ -133,7 +133,7 @@ def generate_index_html(cards_html):
     <header class="VPNav">
         <div class="VPNavBar">
             <a href="/" class="logo-main"><div class="pulse"></div> N.I.U.S.</a>
-            <div class="nav-center">nexus.intelligence.ultimate.source.</div>
+            <div class="nav-center">{current_date}</div>
             <div class="appearance" onclick="toggleTheme()">
                 <div class="appearance-check">{sun_icon}{moon_icon}</div>
             </div>
@@ -141,10 +141,6 @@ def generate_index_html(cards_html):
     </header>
 
     <main class="container">
-        <header class="date-header">
-            <div class="date-label">{current_date}</div>
-            <div class="date-sub">Intelligence Report</div>
-        </header>
         <div class="items">{cards_html}</div>
     </main>
 
