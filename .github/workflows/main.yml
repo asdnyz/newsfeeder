@@ -1,0 +1,32 @@
+name: NIUS Daily Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run NIUS Engine
+        run: python main.py
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git config --global user.name "Niyaz Asad"
+          git config --global user.email "niyaz@users.noreply.github.com"
+          git add index.html briefings/
+          git commit -m "N.I.U.S. Terminal Update: $(date)" || echo "No changes to commit"
+          git push
