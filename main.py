@@ -16,7 +16,7 @@ RSS_FEEDS = [
 TECH_KEYWORDS = ["Tech","AI", "Nvidia", "Apple", "GPT", "OpenAI", "Microsoft", "LLM", "Silicon", "Tesla", "Fintech", "Market", "Economy"]
 
 # --- 2. SUMMARIZATION LOGIC ---
-def clean_and_summarize(raw_html, limit=200):
+def clean_and_summarize(raw_html, limit=160): # Reduced limit for smaller cards
     text = re.sub(r'<[^>]+>', '', raw_html)
     text = " ".join(text.split())
     if len(text) > limit:
@@ -37,13 +37,12 @@ def fetch_news():
         except Exception as e:
             print(f"⚠️ Feed Error: {e}")
 
-    # Sort by date (newest first)
     all_entries.sort(key=lambda x: x.get('published_parsed') or x.get('updated_parsed'), reverse=True)
     
     cards_html = ""
     link_icon = '<svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>'
 
-    for entry in all_entries[:6]:
+    for entry in all_entries[:9]: # Show 9 cards now that they are smaller
         summary = clean_and_summarize(entry.get('summary', '') or entry.get('description', ''))
         cards_html += f"""
         <div class="VPFeature">
@@ -58,8 +57,6 @@ def fetch_news():
 # --- 4. HTML GENERATION ---
 def generate_index_html(cards_html):
     print("🍏 Building NIUS VitePress UI...")
-    
-    # Generate the current date label
     current_date = datetime.now().strftime("%B %d, %Y")
     
     sun_icon = '<svg class="vpi-sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.415-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>'
@@ -71,9 +68,7 @@ def generate_index_html(cards_html):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N.I.U.S. | Daily Brief</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {{ 
             --vp-c-bg: #ffffff; --vp-c-bg-soft: #f6f6f7; --vp-c-bg-mute: #f1f1f2; 
@@ -85,13 +80,12 @@ def generate_index_html(cards_html):
             --vp-c-text-1: rgba(255, 255, 255, 0.87); --vp-c-text-2: rgba(235, 235, 235, 0.6); 
             --vp-c-border: #2e2e32; 
         }}
-        body {{ font-family: 'Inter', -apple-system, sans-serif; background-color: var(--vp-c-bg); color: var(--vp-c-text-1); margin: 0; -webkit-font-smoothing: antialiased; }}
+        body {{ font-family: 'Inter', sans-serif; background-color: var(--vp-c-bg); color: var(--vp-c-text-1); margin: 0; -webkit-font-smoothing: antialiased; }}
         
-        /* Fixed Navigation */
         .VPNav {{ position: fixed; top: 0; left: 0; width: 100%; height: var(--vp-nav-height); background-color: var(--vp-c-bg); border-bottom: 1px solid var(--vp-c-border); z-index: 1000; backdrop-filter: blur(8px); display: flex; align-items: center; }}
         .VPNavBar {{ width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }}
         .logo-main {{ font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--vp-c-text-1); text-decoration: none; }}
-        .nav-center {{ position: absolute; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 13px; color: var(--vp-c-text-2); text-transform: lowercase; }}
+        .nav-center {{ position: absolute; left: 50%; transform: translateX(-50%); font-weight: 600; font-size: 13px; color: var(--vp-c-text-2); text-transform: lowercase; letter-spacing: 0.02em; }}
         
         .pulse {{ width: 8px; height: 8px; background: var(--vp-c-brand); border-radius: 50%; animation: pulse 2s infinite; }}
         @keyframes pulse {{ 0% {{ box-shadow: 0 0 0 0 rgba(62, 175, 124, 0.7); }} 70% {{ box-shadow: 0 0 0 10px rgba(62, 175, 124, 0); }} 100% {{ box-shadow: 0 0 0 0 rgba(62, 175, 124, 0); }} }}
@@ -103,29 +97,32 @@ def generate_index_html(cards_html):
         html.dark .vpi-sun {{ display: none; }}
         html:not(.dark) .vpi-moon {{ display: none; }}
 
-        /* Main Layout */
         .container {{ max-width: 1152px; margin: 100px auto 40px; padding: 0 24px; }}
         
-        /* Date Header Styles */
-        .date-header {{ border-bottom: 1px solid var(--vp-c-border); padding-bottom: 12px; margin-bottom: 32px; }}
-        .date-label {{ font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }}
-        .date-sub {{ font-size: 14px; color: var(--vp-c-text-2); font-weight: 500; margin-top: 4px; }}
-
-        /* Grid - Fixed Overlap */
-        .items {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }}
-        .box {{ display: flex; flex-direction: column; height: 100%; padding: 24px; border-radius: 12px; border: 1px solid var(--vp-c-bg-soft); background-color: var(--vp-c-bg-soft); transition: border-color 0.25s; }}
-        .box:hover {{ border-color: var(--vp-c-brand); }}
-        .title {{ line-height: 1.4; font-size: 18px; font-weight: 700; margin: 0 0 12px; }}
-        .details {{ flex-grow: 1; line-height: 1.6; font-size: 14px; color: var(--vp-c-text-2); margin-bottom: 20px; }}
-        .VPLink {{ font-size: 13px; font-weight: 600; color: var(--vp-c-brand); text-decoration: none; display: flex; align-items: center; gap: 6px; }}
-        .link-icon {{ width: 14px; height: 14px; }}
+        /* Fixed Grid Overlap - Removing Min-Height and fixing flow */
+        .items {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; align-items: stretch; }}
+        
+        .box {{ 
+            display: flex; flex-direction: column; 
+            padding: 18px; border-radius: 8px; /* Tighter padding */
+            border: 1px solid var(--vp-c-bg-soft); 
+            background-color: var(--vp-c-bg-soft); transition: 0.2s;
+            height: 100%; 
+        }}
+        .box:hover {{ border-color: var(--vp-c-brand); transform: translateY(-2px); }}
+        
+        /* Smaller Typography */
+        .title {{ line-height: 1.3; font-size: 15px; font-weight: 700; margin: 0 0 10px; color: var(--vp-c-text-1); }}
+        .details {{ line-height: 1.5; font-size: 13px; color: var(--vp-c-text-2); margin-bottom: 12px; flex-grow: 1; }}
+        .VPLink {{ font-size: 11px; font-weight: 600; color: var(--vp-c-brand); text-decoration: none; display: flex; align-items: center; gap: 5px; opacity: 0.8; }}
+        .VPLink:hover {{ opacity: 1; }}
+        .link-icon {{ width: 12px; height: 12px; }}
         b {{ color: var(--vp-c-text-1); font-weight: 700; }}
 
         @media (max-width: 768px) {{
             .nav-center {{ display: none; }}
             .container {{ margin-top: 80px; padding: 0 16px; }}
-            .items {{ grid-template-columns: 1fr; gap: 16px; }}
-            .date-label {{ font-size: 20px; }}
+            .items {{ grid-template-columns: 1fr; }}
         }}
     </style>
 </head>
@@ -139,22 +136,17 @@ def generate_index_html(cards_html):
             </div>
         </div>
     </header>
-
     <main class="container">
         <div class="items">{cards_html}</div>
     </main>
-
     <script>
         function toggleTheme() {{
             document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('vitepress-theme-appearance', isDark ? 'dark' : 'light');
+            localStorage.setItem('vp-theme-v3', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         }}
         (function() {{
-            const saved = localStorage.getItem('vitepress-theme-appearance');
-            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {{
-                document.documentElement.classList.add('dark');
-            }}
+            const saved = localStorage.getItem('vp-theme-v3') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            if (saved === 'dark') document.documentElement.classList.add('dark');
         }})();
     </script>
 </body>
@@ -162,7 +154,3 @@ def generate_index_html(cards_html):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-
-if __name__ == "__main__":
-    cards = fetch_news()
-    generate_index_html(cards)
