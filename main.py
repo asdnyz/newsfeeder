@@ -6,7 +6,6 @@ from datetime import datetime
 
 # --- 1. CONFIGURATION ---
 RSS_FEEDS = [
-    "https://techcrunch.com/feed/",
     "https://rsshub.app/theverge/index",
     "https://rsshub.app/hackernews",
     "https://rsshub.app/bbc/world",
