@@ -9,215 +9,240 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         :root {
             --bg: #ffffff; --text: #1d1d1f; --sub: #86868b; --accent: #3eaf7c; --border: #e2e2e3;
-            --nav-h: 60px; --font-main: 'Inter', sans-serif;
-            --ft-title: clamp(1rem, 1.2vw + 0.5rem, 1.25rem);
-            --ft-details: clamp(0.8rem, 0.7vw + 0.4rem, 0.9rem);
+            --nav-h: 80px; --font-main: 'Inter', sans-serif;
             --menu-bg: #ffffff;
         }
         [data-theme="dark"] {
-            --bg: #000000; --text: #f5f5f7; --sub: #a1a1a6; --border: #262626;
-            --menu-bg: #111111;
+            --bg: #000000; --text: #f5f5f7; --sub: #a1a1a6; --border: #262626; --menu-bg: #111111;
         }
-        body { font-family: var(--font-main); background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; transition: background 0.4s; overflow-x: hidden; }
+        
+        /* 150% SCALE OVERRIDE */
+        html { font-size: 18px; } /* Base font increased from 16px */
+        
+        body { font-family: var(--font-main); background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s; overflow-x: hidden; }
 
         /* --- NAV --- */
-        .nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--bg); border-bottom: 1px solid var(--border); z-index: 2000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; backdrop-filter: blur(15px); }
-        .logo { font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 6px; text-decoration: none; color: inherit; z-index: 2100; }
-        .pulse { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: p 2s infinite; }
-        @keyframes p { 0% { box-shadow: 0 0 0 0 rgba(62,175,124,0.4); } 70% { box-shadow: 0 0 0 8px rgba(62,175,124,0); } 100% { box-shadow: 0 0 0 0 rgba(62,175,124,0); } }
-        .date-center { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 9px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+        .nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--bg); border-bottom: 1px solid var(--border); z-index: 2000; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; backdrop-filter: blur(15px); }
+        .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; z-index: 2100; }
+        
+        .date-center { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 14px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+        .pulse { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; animation: p 2s infinite; }
+        @keyframes p { 0% { box-shadow: 0 0 0 0 rgba(62,175,124,0.4); } 70% { box-shadow: 0 0 0 10px rgba(62,175,124,0); } 100% { box-shadow: 0 0 0 0 rgba(62,175,124,0); } }
         
         /* --- MENU --- */
         #menu-toggle { display: none; }
-        .sandwich { cursor: pointer; z-index: 2100; display: flex; flex-direction: column; gap: 4px; padding: 10px; }
-        .sandwich span { width: 20px; height: 2px; background: var(--text); transition: 0.3s; }
+        .sandwich { cursor: pointer; z-index: 2100; display: flex; flex-direction: column; gap: 6px; padding: 10px; }
+        .sandwich span { width: 28px; height: 3px; background: var(--text); transition: 0.3s; }
         
         .nav-actions { 
-            position: fixed; top: 0; right: -100%; width: 260px; height: 100vh;
+            position: fixed; top: 0; right: -100%; width: 300px; height: 100vh;
             background: var(--menu-bg); border-left: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 100px 25px; gap: 15px;
+            display: flex; flex-direction: column; padding: 100px 30px; gap: 18px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2050;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            box-shadow: -15px 0 45px rgba(0,0,0,0.15);
         }
         #menu-toggle:checked ~ .nav-actions { right: 0; }
-        
-        .menu-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.2); z-index: 2040; display: none; 
-        }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 2040; display: none; }
         #menu-toggle:checked ~ .menu-overlay { display: block; }
 
         .menu-item { 
-            padding: 12px 15px; border-radius: 8px; font-size: 11px; font-weight: 800;
-            color: var(--text); text-decoration: none; background: var(--border);
-            text-transform: uppercase; text-align: left; border: none; cursor: pointer;
+            padding: 15px 20px; border-radius: 12px; font-size: 14px; font-weight: 800;
+            color: var(--text); background: var(--border); border: none; cursor: pointer; text-align: left;
         }
-        .close-btn { margin-top: auto; background: var(--text); color: var(--bg); text-align: center; }
-        .theme-toggle-btn { background: none; color: var(--accent); margin-bottom: 10px; }
+        .filter-btn.active { background: var(--accent); color: white; }
+        .close-btn { margin-top: auto; background: var(--text); color: var(--bg); text-align: center; font-size: 16px; }
 
         /* --- CONTENT --- */
-        .container { width: 100%; max-width: 1000px; margin: 80px auto 40px; padding: 0 15px; }
-        .items { display: grid; gap: 20px; }
-
-        [data-ui="columnist"] .items { grid-template-columns: 1fr 1fr; gap: 30px; }
-        [data-ui="columnist"] .news-item { border-left: 2px solid var(--border); padding-left: 15px; }
-        [data-ui="feed"] .container { max-width: 600px; }
-        [data-ui="terminal"] body { background: #000; color: #00ff41; font-family: 'JetBrains Mono', monospace; }
-
-        .title { line-height: 1.2; font-weight: 800; margin: 0 0 6px; font-size: var(--ft-title); }
+        .container { width: 100%; max-width: 1200px; margin: 120px auto 60px; padding: 0 30px; }
+        .items { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        
+        .news-item { border-left: 4px solid var(--border); padding-left: 20px; transition: 0.3s; }
+        .source-tag { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; font-family: 'JetBrains Mono'; }
+        .title { font-size: 1.4rem; line-height: 1.25; font-weight: 800; margin: 0 0 12px; }
         .title a { text-decoration: none; color: inherit; }
-        .details { font-size: var(--ft-details); line-height: 1.45; color: var(--sub); }
-        b { color: var(--text); font-weight: 700; }
+        .details { font-size: 1.1rem; line-height: 1.55; color: var(--sub); }
 
         @media (max-width: 768px) {
-            [data-ui="columnist"] .items { grid-template-columns: 1fr; }
-            .container { margin-top: 75px; }
-            .date-center { font-size: 8px; }
+            .items { grid-template-columns: 1fr; gap: 35px; }
+            .container { margin-top: 110px; }
+            .date-center { font-size: 11px; }
+            .logo { font-size: 16px; }
         }
     </style>
 </head>
 <body>
     <nav class="nav">
-        <div class="logo"><div class="pulse"></div> N.I.U.S.</div>
-        <div class="date-center" id="live-date" data-full="january 05, 2026" data-short="05-jan-26">january 05, 2026</div>
+        <a href="#" class="logo">N.I.U.S.</a>
+        <div class="date-center" id="live-date" data-full="january 05, 2026" data-short="05-jan-26">
+            <div class="pulse"></div> january 05, 2026
+        </div>
         
         <div class="menu-wrap">
             <input type="checkbox" id="menu-toggle">
             <div class="menu-overlay" onclick="toggleMenu(false)"></div>
-            
-            <label for="menu-toggle" class="sandwich" id="sandwich-label">
-                <span></span><span></span><span></span>
-            </label>
+            <label for="menu-toggle" class="sandwich"><span></span><span></span><span></span></label>
             
             <div class="nav-actions">
-                <button class="menu-item theme-toggle-btn" onclick="toggleTheme()">🌓 Change Theme</button>
-                <div style="font-size: 9px; font-weight: 800; color: var(--sub); margin-top: 10px;">SELECT MODEL</div>
+                <button class="menu-item" style="color:var(--accent)" onclick="toggleTheme()">🌓 TOGGLE APPEARANCE</button>
+                
+                <div style="font-size: 12px; font-weight: 800; color: var(--sub); margin-top: 15px;">SOURCE FILTER</div>
+                <button class="menu-item filter-btn active" onclick="filterSource('all', this)">All Feeds</button>
+                <button class="menu-item filter-btn" onclick="filterSource('TechCrunch', this)">TechCrunch</button>
+                <button class="menu-item filter-btn" onclick="filterSource('The Verge', this)">The Verge</button>
+                <button class="menu-item filter-btn" onclick="filterSource('Hacker News', this)">Hacker News</button>
+                
+                <div style="font-size: 12px; font-weight: 800; color: var(--sub); margin-top: 15px;">LAYOUT</div>
                 <button class="menu-item" onclick="setUI('columnist')">Columnist</button>
-                <button class="menu-item" onclick="setUI('feed')">Intel Feed</button>
                 <button class="menu-item" onclick="setUI('terminal')">Terminal</button>
                 
                 <button class="menu-item close-btn" onclick="toggleMenu(false)">✕ CLOSE MENU</button>
             </div>
         </div>
     </nav>
+
     <main class="container"><div class="items" id="news-grid">
-        <article class="news-item">
+        <article class="news-item" data-source="TechCrunch">
             <div class="content">
+                <div class="source-tag">TechCrunch</div>
                 <h2 class="title"><a href="https://techcrunch.com/2026/01/05/flutterwave-buys-nigerias-mono-in-rare-african-fintech-exit/" target="_blank">Flutterwave buys Nigeria’s Mono in rare African fintech exit</a></h2>
                 <p class="details">Africa’s largest <b>Fintech</b> company, Flutterwave, has acquired Nigerian open banking startup Mono in an all-stock deal valued between $25 million and $40 million, according to people...</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
-                <h2 class="title"><a href="https://www.bbc.com/news/articles/c70lw9x581no?at_medium=RSS&at_campaign=rss" target="_blank">South Korea's Lee Jae Myung meets China's Xi as he seeks to reset ties</a></h2>
-                <p class="details">Trade, regional security and Beijing's unofficial ban on Korean pop culture are on the agenda.</p>
-            </div>
-        </article>
-        <article class="news-item">
-            <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://www.dlp.rip/decorative-cryptography" target="_blank">Decorative Cryptography</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://news.ycombinator.com/item?id=46496357" target="_blank">Inducing self-NSFW classification in image models to prevent deepfakes edits</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
-                <h2 class="title"><a href="https://www.bbc.com/news/articles/cj9r0eyw0jno?at_medium=RSS&at_campaign=rss" target="_blank">Thirty-two Cubans killed during US attack on Venezuela</a></h2>
-                <p class="details">Cuba's president s<b>AI</b>d military and intelligence operatives were providing protection to captured leader Nicolás Maduro.</p>
-            </div>
-        </article>
-        <article class="news-item">
-            <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://www.cs.cmu.edu/~pavlo/blog/2026/01/2025-databases-retrospective.html" target="_blank">Databases in 2025: A Year in Review</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://www.nytimes.com/2025/11/08/science/biggest-spiderweb-sulfur-cave.html" target="_blank">A spider web unlike any seen before</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="The Verge">
             <div class="content">
+                <div class="source-tag">The Verge</div>
                 <h2 class="title"><a href="https://www.theverge.com/tech/854457/frontierx-vex-aura-robots-companions-pets" target="_blank">This robot companion is a cameraman for your pet</a></h2>
                 <p class="details">For a long time, tech companies have pitched pet cameras as a way to find out what your furball is up to when you're not home. Vex, a new robot companion launched at CES this...</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
-                <h2 class="title"><a href="https://www.bbc.com/news/articles/ckgnxvp477eo?at_medium=RSS&at_campaign=rss" target="_blank">Trump warns new Venezuelan leader as Maduro set to appear in court</a></h2>
-                <p class="details">Trump s<b>AI</b>d Venezuela's interim president Delcy Rodríguez could "pay a very big price, probably bigger than Maduro" if she "doesn't do what's right".</p>
-            </div>
-        </article>
-        <article class="news-item">
-            <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://www.wsj.com/politics/policy/ice-facial-recognition-app-mobile-fortify-dfdd00bf" target="_blank">ICE Is Using Facial-Recognition Technology to Quickly Arrest People</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="http://mpaxos.com/blog/rusty-cpp.html" target="_blank">Building a Rust-style static analyzer for C++ with AI</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="The Verge">
             <div class="content">
+                <div class="source-tag">The Verge</div>
                 <h2 class="title"><a href="https://www.theverge.com/gadgets/850488/birdbuddy-2-mini-ces-2026" target="_blank">Birdbuddy’s new smart feeders aim to make spotting birds easier, even for beginners</a></h2>
                 <p class="details">Birdbuddy is introducing two new smart bird feeders: the flagship Birdbuddy 2 and the more compact, cheaper Birdbuddy 2 Mini <b>AI</b>med at first-time users and smaller outdoor spaces....</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="The Verge">
             <div class="content">
+                <div class="source-tag">The Verge</div>
                 <h2 class="title"><a href="https://www.theverge.com/tech/854352/samsung-galaxy-z-trifold-hands-on" target="_blank">I just want to keep unfolding the Samsung Z TriFold</a></h2>
                 <p class="details">Holding the Z TriFold confirmed my suspicions: It's a tablet with a phone attached. And after spending an hour folding and unfolding it, I'm pretty much ready to trade in the...</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="Hacker News">
             <div class="content">
+                <div class="source-tag">Hacker News</div>
                 <h2 class="title"><a href="https://consumer.drop.privacy.ca.gov/" target="_blank">California residents can now request all data brokers delete personal info</a></h2>
                 <p class="details">Comments</p>
             </div>
         </article>
-        <article class="news-item">
+        <article class="news-item" data-source="The Verge">
             <div class="content">
-                <h2 class="title"><a href="https://www.bbc.com/news/articles/c4g0zg974v1o?at_medium=RSS&at_campaign=rss" target="_blank">Danish PM tells Trump to stop 'threats' against Greenland</a></h2>
-                <p class="details">Mette Frederiksen s<b>AI</b>d the "US has no right to annex any of the three nations in the Danish kingdom".</p>
+                <div class="source-tag">The Verge</div>
+                <h2 class="title"><a href="https://www.theverge.com/tech/853758/shut-the-fridge-door" target="_blank">Shut the fridge door!</a></h2>
+                <p class="details">Samsung's latest update to its Family Hub smart fridge line adds a feature I've always wanted - voice-activated door opening and closing. Using the device's built-in Bixby voice...</p>
+            </div>
+        </article>
+        <article class="news-item" data-source="The Verge">
+            <div class="content">
+                <div class="source-tag">The Verge</div>
+                <h2 class="title"><a href="https://www.theverge.com/tech/853886/lgs-wallpaper-oled-tv-returns-to-ces-and-its-wafer-thin" target="_blank">LG’s Wallpaper OLED TV returns to CES, and it’s wafer thin</a></h2>
+                <p class="details">The amazingly thin wallpaper design from LG is back. The first Wallpaper TV was released back in 2017, and it's been six years since we saw the last one. But LG has revived the...</p>
+            </div>
+        </article>
+        <article class="news-item" data-source="Hacker News">
+            <div class="content">
+                <div class="source-tag">Hacker News</div>
+                <h2 class="title"><a href="https://sparkbox.com/foundry/helene_and_mobile_web_performance" target="_blank">During Helene, I just wanted a plain text website</a></h2>
+                <p class="details">Comments</p>
+            </div>
+        </article>
+        <article class="news-item" data-source="The Verge">
+            <div class="content">
+                <div class="source-tag">The Verge</div>
+                <h2 class="title"><a href="https://www.theverge.com/tech/853844/ultraloq-ces-smart-lock-face-palm-reading" target="_blank">The new Ultraloq smart lock uses both your face and your palm to let you in</a></h2>
+                <p class="details">Xthings is rolling into CES with a bunch of new gear, including two new smart locks and a few smart security cameras. It's definitely the Ultraloq Bolt Sense that's the most...</p>
             </div>
         </article></div></main>
+
     <script>
         function updateDate() {
             const el = document.getElementById('live-date');
-            el.innerText = window.innerWidth < 768 ? el.getAttribute('data-short') : el.getAttribute('data-full');
+            const dateStr = window.innerWidth < 768 ? el.getAttribute('data-short') : el.getAttribute('data-full');
+            el.innerHTML = '<div class="pulse"></div> ' + dateStr;
         }
         window.addEventListener('resize', updateDate);
 
-        function toggleMenu(state) {
-            document.getElementById('menu-toggle').checked = state;
+        function toggleMenu(s) { document.getElementById('menu-toggle').checked = s; }
+        
+        function filterSource(source, btn) {
+            const items = document.querySelectorAll('.news-item');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            items.forEach(item => {
+                item.style.display = (source === 'all' || item.getAttribute('data-source') === source) ? 'block' : 'none';
+            });
+            toggleMenu(false);
         }
 
         function toggleTheme() {
-            const target = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', target);
-            localStorage.setItem('nius-v14-theme', target);
+            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('nius-v-final-theme', t);
         }
 
-        function setUI(mode) {
-            document.documentElement.setAttribute('data-ui', mode);
-            localStorage.setItem('nius-v14-ui', mode);
+        function setUI(m) {
+            document.documentElement.setAttribute('data-ui', m);
+            localStorage.setItem('nius-v-final-ui', m);
             toggleMenu(false);
         }
 
         window.onload = () => {
             updateDate();
-            setUI(localStorage.getItem('nius-v14-ui') || 'columnist');
-            const theme = localStorage.getItem('nius-v14-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setUI(localStorage.getItem('nius-v-final-ui') || 'columnist');
+            const theme = localStorage.getItem('nius-v-final-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
         };
     </script>
