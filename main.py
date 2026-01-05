@@ -13,8 +13,6 @@ RSS_FEEDS = {
     "Reuters Tech": "https://www.reutersagency.com/feed/?best-sectors=technology&post_type=best"
 }
 
-TECH_KEYWORDS = ["AI", "Nvidia", "Apple", "GPT", "OpenAI", "Microsoft", "LLM", "Silicon", "Tesla", "Fintech"]
-
 def clean_and_summarize(raw_html, limit=180):
     text = re.sub(r'<[^>]+>', '', raw_html)
     text = " ".join(text.split())
@@ -22,9 +20,6 @@ def clean_and_summarize(raw_html, limit=180):
         return None
     if len(text) > limit:
         text = text[:limit].rsplit(' ', 1)[0] + "..."
-    for word in TECH_KEYWORDS:
-        pattern = re.compile(re.escape(word), re.IGNORECASE)
-        text = pattern.sub(f"<b>{word}</b>", text)
     return text
 
 def fetch_data():
