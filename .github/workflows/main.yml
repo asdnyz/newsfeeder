@@ -2,7 +2,7 @@ name: NIUS Daily Sync
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight
+    - cron: '0 */2 * * *' # Runs daily at midnight
   workflow_dispatch: # Allows you to run it manually for testing
 
 jobs:
@@ -30,3 +30,12 @@ jobs:
           git add index.html briefings/
           git commit -m "N.I.U.S. Terminal Update: $(date)" || echo "No changes to commit"
           git push
+
+      - name: Notify Phone via ntfy
+        if: success()
+        run: |
+          curl -d "📡 NIUS PRO: Intelligence Sync Complete. Your daily tech briefing is live." \
+               -H "Title: Sync Success" \
+               -H "Priority: high" \
+               -H "Tags: partying_face,rocket" \
+               ntfy.sh/nius_sync_asad_2026
