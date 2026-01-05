@@ -13,16 +13,11 @@ RSS_FEEDS = [
     "https://rsshub.app/reuters/world"
 ]
 
-TECH_KEYWORDS = ["AI", "Nvidia", "Apple", "GPT", "OpenAI", "Microsoft", "LLM", "Silicon", "Tesla", "Fintech"]
-
 def clean_and_summarize(raw_html, limit=180):
     text = re.sub(r'<[^>]+>', '', raw_html)
     text = " ".join(text.split())
     if len(text) > limit:
         text = text[:limit].rsplit(' ', 1)[0] + "..."
-    for word in TECH_KEYWORDS:
-        pattern = re.compile(re.escape(word), re.IGNORECASE)
-        text = pattern.sub(f"<b>{word}</b>", text)
     return text
 
 def fetch_news():
@@ -80,28 +75,33 @@ def generate_index_html(cards_html):
         @keyframes p {{ 0% {{ box-shadow: 0 0 0 0 rgba(62,175,124,0.4); }} 70% {{ box-shadow: 0 0 0 8px rgba(62,175,124,0); }} 100% {{ box-shadow: 0 0 0 0 rgba(62,175,124,0); }} }}
         .date-center {{ position: absolute; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 9px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }}
         
-        /* --- UNIFIED SANDWICH MENU --- */
+        /* --- MENU --- */
         #menu-toggle {{ display: none; }}
         .sandwich {{ cursor: pointer; z-index: 2100; display: flex; flex-direction: column; gap: 4px; padding: 10px; }}
         .sandwich span {{ width: 20px; height: 2px; background: var(--text); transition: 0.3s; }}
         
         .nav-actions {{ 
-            position: fixed; top: 0; right: -100%; width: 240px; height: 100vh;
+            position: fixed; top: 0; right: -100%; width: 260px; height: 100vh;
             background: var(--menu-bg); border-left: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 100px 25px; gap: 15px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2050;
             box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         }}
         #menu-toggle:checked ~ .nav-actions {{ right: 0; }}
-        #menu-toggle:checked ~ .sandwich span:nth-child(1) {{ transform: translateY(6px) rotate(45deg); }}
-        #menu-toggle:checked ~ .sandwich span:nth-child(2) {{ opacity: 0; }}
-        #menu-toggle:checked ~ .sandwich span:nth-child(3) {{ transform: translateY(-6px) rotate(-45deg); }}
+        
+        /* Backdrop logic */
+        .menu-overlay {{ 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.2); z-index: 2040; display: none; 
+        }}
+        #menu-toggle:checked ~ .menu-overlay {{ display: block; }}
 
         .menu-item {{ 
             padding: 12px 15px; border-radius: 8px; font-size: 11px; font-weight: 800;
             color: var(--text); text-decoration: none; background: var(--border);
             text-transform: uppercase; text-align: left; border: none; cursor: pointer;
         }}
+        .close-btn {{ margin-top: auto; background: var(--text); color: var(--bg); text-align: center; }}
         .theme-toggle-btn {{ background: none; color: var(--accent); margin-bottom: 10px; }}
 
         /* --- CONTENT --- */
@@ -119,7 +119,7 @@ def generate_index_html(cards_html):
         b {{ color: var(--text); font-weight: 700; }}
 
         @media (max-width: 768px) {{
-            [data-ui="columnist"] .items, [data-ui="newspaper"] .items {{ grid-template-columns: 1fr; column-count: 1; }}
+            [data-ui="columnist"] .items {{ grid-template-columns: 1fr; }}
             .container {{ margin-top: 75px; }}
             .date-center {{ font-size: 8px; }}
         }}
@@ -127,12 +127,14 @@ def generate_index_html(cards_html):
 </head>
 <body>
     <nav class="nav">
-        <div class="logo"><div class="pulse"></div> N.I.U.S.</div>
-        <div class="date-center" id="live-date" data-full="{full_date}" data-short="{short_date}">{full_date}</div>
+        <div class="logo"></div> N.I.U.S.</div>
+        <div class="date-center" id="live-date" data-full="{full_date}" data-short="{short_date}"><div class="pulse">{full_date}</div>
         
         <div class="menu-wrap">
             <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="sandwich">
+            <div class="menu-overlay" onclick="toggleMenu(false)"></div>
+            
+            <label for="menu-toggle" class="sandwich" id="sandwich-label">
                 <span></span><span></span><span></span>
             </label>
             
@@ -142,6 +144,8 @@ def generate_index_html(cards_html):
                 <button class="menu-item" onclick="setUI('columnist')">Columnist</button>
                 <button class="menu-item" onclick="setUI('feed')">Intel Feed</button>
                 <button class="menu-item" onclick="setUI('terminal')">Terminal</button>
+                
+                <button class="menu-item close-btn" onclick="toggleMenu(false)">✕ CLOSE MENU</button>
             </div>
         </div>
     </nav>
@@ -153,6 +157,10 @@ def generate_index_html(cards_html):
         }}
         window.addEventListener('resize', updateDate);
 
+        function toggleMenu(state) {{
+            document.getElementById('menu-toggle').checked = state;
+        }}
+
         function toggleTheme() {{
             const target = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', target);
@@ -162,7 +170,7 @@ def generate_index_html(cards_html):
         function setUI(mode) {{
             document.documentElement.setAttribute('data-ui', mode);
             localStorage.setItem('nius-v14-ui', mode);
-            document.getElementById('menu-toggle').checked = false;
+            toggleMenu(false);
         }}
 
         window.onload = () => {{
