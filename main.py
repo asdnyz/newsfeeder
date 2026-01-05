@@ -102,7 +102,7 @@ def generate_index_html(cards_html, buttons_html, ticker_html):
 
         /* --- TICKER --- */
         .ticker-wrap {{ position: fixed; top: var(--nav-h); width: 100%; height: var(--ticker-h); background: var(--text); color: var(--bg); z-index: 1900; overflow: hidden; display: flex; align-items: center; border-bottom: 1px solid var(--border); }}
-        .ticker-text {{ white-space: nowrap; display: inline-block; padding-left: 100%; animation: ticker 60s linear infinite; font-family: 'JetBrains Mono'; font-weight: 800; font-size: 14px; text-transform: uppercase; }}
+        .ticker-text {{ white-space: nowrap; display: inline-block; padding-left: 100%; animation: ticker 400s linear infinite; font-family: 'JetBrains Mono'; font-weight: 800; font-size: 14px; text-transform: uppercase; }}
         @keyframes ticker {{ 0% {{ transform: translate3d(0, 0, 0); }} 100% {{ transform: translate3d(-100%, 0, 0); }} }}
 
         /* --- NAV --- */
