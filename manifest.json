@@ -1,0 +1,15 @@
+{
+  "name": "N.I.U.S. Intelligence",
+  "short_name": "NIUS",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3eaf7c",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/21/21601.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
