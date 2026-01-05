@@ -112,8 +112,6 @@ def generate_index_html(cards_html):
         [data-ui="columnist"] .news-item {{ border-left: 2px solid var(--border); padding-left: 15px; }}
         [data-ui="feed"] .container {{ max-width: 600px; }}
         [data-ui="terminal"] body {{ background: #000; color: #00ff41; font-family: 'JetBrains Mono', monospace; }}
-        [data-ui="newspaper"] .items {{ column-count: 3; column-gap: 30px; display: block; }}
-        [data-ui="newspaper"] .news-item {{ break-inside: avoid; border-bottom: 0.5px solid #444; padding-bottom: 12px; margin-bottom: 12px; }}
 
         .title {{ line-height: 1.2; font-weight: 800; margin: 0 0 6px; font-size: var(--ft-title); }}
         .title a {{ text-decoration: none; color: inherit; }}
@@ -144,9 +142,6 @@ def generate_index_html(cards_html):
                 <button class="menu-item" onclick="setUI('columnist')">Columnist</button>
                 <button class="menu-item" onclick="setUI('feed')">Intel Feed</button>
                 <button class="menu-item" onclick="setUI('terminal')">Terminal</button>
-                <button class="menu-item" onclick="setUI('newspaper')">Newspaper</button>
-                <button class="menu-item" onclick="setUI('magazine')">Magazine</button>
-                <button class="menu-item" onclick="setUI('cards')">Cards</button>
             </div>
         </div>
     </nav>
