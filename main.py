@@ -73,7 +73,9 @@ def generate_index_html(cards_html, buttons_html, ticker_html):
 <html lang="en" data-ui="columnist" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" id="status-bar-color" content="#ffffff">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
     <title>N.I.U.S. PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -181,9 +183,15 @@ def generate_index_html(cards_html, buttons_html, ticker_html):
             toggleMenu(false);
         }}
         function toggleTheme() {{
-            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('nius-final-theme', t);
+            const root = document.documentElement;
+            const current = root.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', target);
+            localStorage.setItem('nius-final-theme', target);
+            
+            // This line syncs the Android Status Bar with your theme color
+            const metaThemeColor = document.getElementById("status-bar-color");
+            metaThemeColor.setAttribute("content", target === 'dark' ? '#000000' : '#ffffff');
         }}
         function setUI(m) {{
             document.documentElement.setAttribute('data-ui', m);
@@ -195,6 +203,7 @@ def generate_index_html(cards_html, buttons_html, ticker_html):
             setUI(localStorage.getItem('nius-final-ui') || 'columnist');
             const theme = localStorage.getItem('nius-final-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById("status-bar-color").setAttribute("content", theme === 'dark' ? '#000000' : '#ffffff');
         }};
     </script>
 </body>
