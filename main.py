@@ -2,11 +2,11 @@ import os
 import glob
 import re
 import feedparser
+import urllib.request
 from datetime import datetime
 
 # --- 1. CONFIGURATION ---
 RSS_FEEDS = [
-    "https://techcrunch.com/feed/",
     "https://rsshub.app/theverge/index",
     "https://rsshub.app/hackernews",
     "https://rsshub.app/bbc/world",
@@ -26,17 +26,31 @@ def clean_and_summarize(raw_html, limit=180):
     return text
 
 def fetch_news():
-    print("📡 Syncing Pro Intelligence...")
+    print("📡 Syncing Pro Intelligence (with Browser Simulation)...")
     all_entries = []
+    
+    # Headers to bypass bot detection
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+
     for url in RSS_FEEDS:
         try:
-            feed = feedparser.parse(url)
-            all_entries.extend(feed.entries)
-        except: pass
+            # We use urllib to fetch with headers, then pass the content to feedparser
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as response:
+                content = response.read()
+                feed = feedparser.parse(content)
+                if feed.entries:
+                    print(f"✅ Success: {url} ({len(feed.entries)} items)")
+                    all_entries.extend(feed.entries)
+                else:
+                    print(f"⚠️ Empty Feed: {url}")
+        except Exception as e:
+            print(f"❌ Failed: {url} | Error: {str(e)}")
+
     all_entries.sort(key=lambda x: x.get('published_parsed') or x.get('updated_parsed'), reverse=True)
     
     cards_html = ""
-    for i, entry in enumerate(all_entries[:12]):
+    for i, entry in enumerate(all_entries[:15]): # Bumped to 15 items
         summary = clean_and_summarize(entry.get('summary', '') or entry.get('description', ''))
         cards_html += f"""
         <article class="news-item">
@@ -57,7 +71,7 @@ def generate_index_html(cards_html):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>N.I.U.S.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         * {{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }}
         :root {{
@@ -71,7 +85,7 @@ def generate_index_html(cards_html):
             --bg: #000000; --text: #f5f5f7; --sub: #a1a1a6; --border: #262626;
             --menu-bg: #111111;
         }}
-        body {{ font-family: var(--font-main); background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s; overflow-x: hidden; }}
+        body {{ font-family: var(--font-main); background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; transition: background 0.4s; overflow-x: hidden; }}
 
         /* --- NAV --- */
         .nav {{ position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--bg); border-bottom: 1px solid var(--border); z-index: 2000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; backdrop-filter: blur(15px); }}
