@@ -27,28 +27,33 @@
         @keyframes p { 0% { box-shadow: 0 0 0 0 rgba(62,175,124,0.4); } 70% { box-shadow: 0 0 0 8px rgba(62,175,124,0); } 100% { box-shadow: 0 0 0 0 rgba(62,175,124,0); } }
         .date-center { position: absolute; left: 50%; transform: translateX(-50%); font-weight: 700; font-size: 9px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
         
-        /* --- UNIFIED SANDWICH MENU --- */
+        /* --- MENU --- */
         #menu-toggle { display: none; }
         .sandwich { cursor: pointer; z-index: 2100; display: flex; flex-direction: column; gap: 4px; padding: 10px; }
         .sandwich span { width: 20px; height: 2px; background: var(--text); transition: 0.3s; }
         
         .nav-actions { 
-            position: fixed; top: 0; right: -100%; width: 240px; height: 100vh;
+            position: fixed; top: 0; right: -100%; width: 260px; height: 100vh;
             background: var(--menu-bg); border-left: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 100px 25px; gap: 15px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2050;
             box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         }
         #menu-toggle:checked ~ .nav-actions { right: 0; }
-        #menu-toggle:checked ~ .sandwich span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-        #menu-toggle:checked ~ .sandwich span:nth-child(2) { opacity: 0; }
-        #menu-toggle:checked ~ .sandwich span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+        
+        /* Backdrop logic */
+        .menu-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.2); z-index: 2040; display: none; 
+        }
+        #menu-toggle:checked ~ .menu-overlay { display: block; }
 
         .menu-item { 
             padding: 12px 15px; border-radius: 8px; font-size: 11px; font-weight: 800;
             color: var(--text); text-decoration: none; background: var(--border);
             text-transform: uppercase; text-align: left; border: none; cursor: pointer;
         }
+        .close-btn { margin-top: auto; background: var(--text); color: var(--bg); text-align: center; }
         .theme-toggle-btn { background: none; color: var(--accent); margin-bottom: 10px; }
 
         /* --- CONTENT --- */
@@ -66,7 +71,7 @@
         b { color: var(--text); font-weight: 700; }
 
         @media (max-width: 768px) {
-            [data-ui="columnist"] .items, [data-ui="newspaper"] .items { grid-template-columns: 1fr; column-count: 1; }
+            [data-ui="columnist"] .items { grid-template-columns: 1fr; }
             .container { margin-top: 75px; }
             .date-center { font-size: 8px; }
         }
@@ -74,12 +79,14 @@
 </head>
 <body>
     <nav class="nav">
-        <div class="logo"><div class="pulse"></div> N.I.U.S.</div>
-        <div class="date-center" id="live-date" data-full="january 05, 2026" data-short="05-jan-26">january 05, 2026</div>
+        <div class="logo"></div> N.I.U.S.</div>
+        <div class="date-center" id="live-date" data-full="january 05, 2026" data-short="05-jan-26"><div class="pulse">january 05, 2026</div>
         
         <div class="menu-wrap">
             <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="sandwich">
+            <div class="menu-overlay" onclick="toggleMenu(false)"></div>
+            
+            <label for="menu-toggle" class="sandwich" id="sandwich-label">
                 <span></span><span></span><span></span>
             </label>
             
@@ -89,6 +96,8 @@
                 <button class="menu-item" onclick="setUI('columnist')">Columnist</button>
                 <button class="menu-item" onclick="setUI('feed')">Intel Feed</button>
                 <button class="menu-item" onclick="setUI('terminal')">Terminal</button>
+                
+                <button class="menu-item close-btn" onclick="toggleMenu(false)">✕ CLOSE MENU</button>
             </div>
         </div>
     </nav>
@@ -96,13 +105,13 @@
         <article class="news-item">
             <div class="content">
                 <h2 class="title"><a href="https://techcrunch.com/2026/01/04/can-a-social-app-fix-the-terrible-devastation-of-social-media/" target="_blank">Can a social app fix the ‘terrible devastation’ of social media?</a></h2>
-                <p class="details">Twitter co-founder Biz Stone and Pinterest co-founder Evan Sharp have r<b>AI</b>sed new funding for a social media app that helps users "plan with intention."</p>
+                <p class="details">Twitter co-founder Biz Stone and Pinterest co-founder Evan Sharp have raised new funding for a social media app that helps users "plan with intention."</p>
             </div>
         </article>
         <article class="news-item">
             <div class="content">
                 <h2 class="title"><a href="https://techcrunch.com/2026/01/04/doordash-says-it-banned-driver-who-seemingly-faked-a-delivery-using-ai/" target="_blank">DoorDash says it banned driver who seemingly faked a delivery using AI</a></h2>
-                <p class="details">DoorDash seems to have confirmed a viral story about a driver using an <b>AI</b>-generated photo to lie about making a delivery.</p>
+                <p class="details">DoorDash seems to have confirmed a viral story about a driver using an AI-generated photo to lie about making a delivery.</p>
             </div>
         </article>
         <article class="news-item">
@@ -156,13 +165,13 @@
         <article class="news-item">
             <div class="content">
                 <h2 class="title"><a href="https://techcrunch.com/2026/01/02/tesla-annual-sales-decline-9-as-its-overtaken-by-byd-as-global-ev-leader/" target="_blank">Tesla annual sales decline 9% as it’s overtaken by BYD as global EV leader</a></h2>
-                <p class="details"><b>Tesla</b> annual sales have fallen for the second year in a row, a drop fueled by the removal of the federal tax credit in the U.S. and competition from Chinese automakers.</p>
+                <p class="details">Tesla annual sales have fallen for the second year in a row, a drop fueled by the removal of the federal tax credit in the U.S. and competition from Chinese automakers.</p>
             </div>
         </article>
         <article class="news-item">
             <div class="content">
                 <h2 class="title"><a href="https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/" target="_blank">Nvidia’s AI empire: A look at its top startup investments</a></h2>
-                <p class="details">Over the last two years, <b>Nvidia</b> has used its ballooning fortunes to invest in over 100 <b>AI</b> startups. Here are the giant semiconductor's largest investments.</p>
+                <p class="details">Over the last two years, Nvidia has used its ballooning fortunes to invest in over 100 AI startups. Here are the giant semiconductor's largest investments.</p>
             </div>
         </article></div></main>
     <script>
@@ -171,6 +180,10 @@
             el.innerText = window.innerWidth < 768 ? el.getAttribute('data-short') : el.getAttribute('data-full');
         }
         window.addEventListener('resize', updateDate);
+
+        function toggleMenu(state) {
+            document.getElementById('menu-toggle').checked = state;
+        }
 
         function toggleTheme() {
             const target = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -181,7 +194,7 @@
         function setUI(mode) {
             document.documentElement.setAttribute('data-ui', mode);
             localStorage.setItem('nius-v14-ui', mode);
-            document.getElementById('menu-toggle').checked = false;
+            toggleMenu(false);
         }
 
         window.onload = () => {
