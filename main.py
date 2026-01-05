@@ -6,11 +6,13 @@ import urllib.request
 from datetime import datetime
 
 # --- 1. CONFIGURATION ---
+# Swapped RSSHub links for direct official feeds to bypass 403 blocks
 RSS_FEEDS = [
-    "https://rsshub.app/theverge/index",
-    "https://rsshub.app/hackernews",
-    "https://rsshub.app/bbc/world",
-    "https://rsshub.app/reuters/world"
+    "https://techcrunch.com/feed/",
+    "https://www.theverge.com/rss/index.xml",
+    "https://news.ycombinator.com/rss",
+    "https://feeds.bbci.co.uk/news/world/rss.xml",
+    "https://www.reutersagency.com/feed/?best-sectors=technology&post_type=best"
 ]
 
 TECH_KEYWORDS = ["AI", "Nvidia", "Apple", "GPT", "OpenAI", "Microsoft", "LLM", "Silicon", "Tesla", "Fintech"]
@@ -26,15 +28,13 @@ def clean_and_summarize(raw_html, limit=180):
     return text
 
 def fetch_news():
-    print("📡 Syncing Pro Intelligence (with Browser Simulation)...")
+    print("📡 Syncing Pro Intelligence (Direct Feeds)...")
     all_entries = []
     
-    # Headers to bypass bot detection
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
 
     for url in RSS_FEEDS:
         try:
-            # We use urllib to fetch with headers, then pass the content to feedparser
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as response:
                 content = response.read()
@@ -50,7 +50,7 @@ def fetch_news():
     all_entries.sort(key=lambda x: x.get('published_parsed') or x.get('updated_parsed'), reverse=True)
     
     cards_html = ""
-    for i, entry in enumerate(all_entries[:15]): # Bumped to 15 items
+    for i, entry in enumerate(all_entries[:15]):
         summary = clean_and_summarize(entry.get('summary', '') or entry.get('description', ''))
         cards_html += f"""
         <article class="news-item">
