@@ -151,13 +151,13 @@ def generate_index_html(cards_html, buttons_html, ticker_html):
             <label for="menu-toggle" class="sandwich"><span></span><span></span><span></span></label>
             
             <div class="nav-actions">
+                <button class="menu-item close-btn" onclick="toggleMenu(false)">✕ CLOSE MENU</button>
                 <button class="menu-item" style="color:var(--accent)" onclick="toggleTheme()">🌓 TOGGLE APPEARANCE</button>
-                <div style="font-size: 12px; font-weight: 800; color: var(--sub); margin-top: 15px;">SOURCE FILTER</div>
-                {buttons_html}
                 <div style="font-size: 12px; font-weight: 800; color: var(--sub); margin-top: 15px;">LAYOUT</div>
                 <button class="menu-item" onclick="setUI('columnist')">Columnist</button>
                 <button class="menu-item" onclick="setUI('terminal')">Terminal</button>
-                <button class="menu-item close-btn" onclick="toggleMenu(false)">✕ CLOSE MENU</button>
+                <div style="font-size: 12px; font-weight: 800; color: var(--sub); margin-top: 15px;">SOURCE FILTER</div>
+                {buttons_html}
             </div>
         </div>
     </nav>
