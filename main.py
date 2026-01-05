@@ -5,7 +5,6 @@ import urllib.request
 from datetime import datetime
 
 # --- 1. CONFIGURATION ---
-# Swapped to high-signal tech feeds to reduce non-tech noise
 RSS_FEEDS = {
     "TechCrunch": "https://techcrunch.com/feed/",
     "The Verge": "https://www.theverge.com/rss/index.xml",
@@ -19,6 +18,9 @@ TECH_KEYWORDS = ["AI", "Nvidia", "Apple", "GPT", "OpenAI", "Microsoft", "LLM", "
 def clean_and_summarize(raw_html, limit=180):
     text = re.sub(r'<[^>]+>', '', raw_html)
     text = " ".join(text.split())
+    # Skip items that are just "Comments" or empty
+    if not text or text.lower() == "comments":
+        return None
     if len(text) > limit:
         text = text[:limit].rsplit(' ', 1)[0] + "..."
     for word in TECH_KEYWORDS:
@@ -37,21 +39,24 @@ def fetch_news():
             with urllib.request.urlopen(req, timeout=15) as response:
                 feed = feedparser.parse(response.read())
                 for entry in feed.entries:
-                    entry['source_label'] = source
-                    all_entries.append(entry)
+                    summary = clean_and_summarize(entry.get('summary', '') or entry.get('description', ''))
+                    # Filter out "Comments" only descriptions
+                    if summary:
+                        entry['processed_summary'] = summary
+                        entry['source_label'] = source
+                        all_entries.append(entry)
         except: pass
 
     all_entries.sort(key=lambda x: x.get('published_parsed') or x.get('updated_parsed'), reverse=True)
     
     cards_html = ""
     for entry in all_entries[:15]:
-        summary = clean_and_summarize(entry.get('summary', '') or entry.get('description', ''))
         cards_html += f"""
         <article class="news-item" data-source="{entry['source_label']}">
             <div class="content">
                 <div class="source-tag">{entry['source_label']}</div>
                 <h2 class="title"><a href="{entry.link}" target="_blank">{entry.title}</a></h2>
-                <p class="details">{summary}</p>
+                <p class="details">{entry['processed_summary']}</p>
             </div>
         </article>"""
     return cards_html
@@ -78,20 +83,27 @@ def generate_index_html(cards_html):
             --bg: #000000; --text: #f5f5f7; --sub: #a1a1a6; --border: #262626; --menu-bg: #111111;
         }}
         
-        /* 150% SCALE OVERRIDE */
-        html {{ font-size: 18px; }} /* Base font increased from 16px */
-        
+        html {{ font-size: 18px; }} 
         body {{ font-family: var(--font-main); background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s; overflow-x: hidden; }}
+
+        /* --- TERMINAL MODEL LOGIC (RESTORED) --- */
+        [data-ui="terminal"] body {{ background: #000 !important; color: #00ff41 !important; font-family: 'JetBrains Mono', monospace !important; }}
+        [data-ui="terminal"] .nav {{ background: #000; border-color: #00ff41; }}
+        [data-ui="terminal"] .news-item {{ border: 1px solid #00ff41; border-left: 6px solid #00ff41; padding: 15px; background: #000; }}
+        [data-ui="terminal"] .title a {{ color: #fff; text-transform: uppercase; font-size: 1.1rem; }}
+        [data-ui="terminal"] .source-tag {{ color: #00ff41; }}
+        [data-ui="terminal"] .details {{ color: #00ff41; }}
+        [data-ui="terminal"] .sandwich span {{ background: #00ff41; }}
 
         /* --- NAV --- */
         .nav {{ position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--bg); border-bottom: 1px solid var(--border); z-index: 2000; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; backdrop-filter: blur(15px); }}
-        .logo {{ font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; z-index: 2100; }}
+        .logo {{ font-weight: 800; font-size: 20px; text-decoration: none; color: inherit; z-index: 2100; }}
         
         .date-center {{ position: absolute; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 14px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; display: flex; align-items: center; gap: 10px; }}
         .pulse {{ width: 10px; height: 10px; background: var(--accent); border-radius: 50%; animation: p 2s infinite; }}
         @keyframes p {{ 0% {{ box-shadow: 0 0 0 0 rgba(62,175,124,0.4); }} 70% {{ box-shadow: 0 0 0 10px rgba(62,175,124,0); }} 100% {{ box-shadow: 0 0 0 0 rgba(62,175,124,0); }} }}
         
-        /* --- MENU --- */
+        /* --- MENU & BACKDROP --- */
         #menu-toggle {{ display: none; }}
         .sandwich {{ cursor: pointer; z-index: 2100; display: flex; flex-direction: column; gap: 6px; padding: 10px; }}
         .sandwich span {{ width: 28px; height: 3px; background: var(--text); transition: 0.3s; }}
@@ -104,7 +116,9 @@ def generate_index_html(cards_html):
             box-shadow: -15px 0 45px rgba(0,0,0,0.15);
         }}
         #menu-toggle:checked ~ .nav-actions {{ right: 0; }}
-        .menu-overlay {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 2040; display: none; }}
+        
+        /* Fixed Overlay: Now covers entire viewport */
+        .menu-overlay {{ position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 2040; display: none; }}
         #menu-toggle:checked ~ .menu-overlay {{ display: block; }}
 
         .menu-item {{ 
@@ -187,19 +201,19 @@ def generate_index_html(cards_html):
         function toggleTheme() {{
             const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', t);
-            localStorage.setItem('nius-v-final-theme', t);
+            localStorage.setItem('nius-final-theme', t);
         }}
 
         function setUI(m) {{
             document.documentElement.setAttribute('data-ui', m);
-            localStorage.setItem('nius-v-final-ui', m);
+            localStorage.setItem('nius-final-ui', m);
             toggleMenu(false);
         }}
 
         window.onload = () => {{
             updateDate();
-            setUI(localStorage.getItem('nius-v-final-ui') || 'columnist');
-            const theme = localStorage.getItem('nius-v-final-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setUI(localStorage.getItem('nius-final-ui') || 'columnist');
+            const theme = localStorage.getItem('nius-final-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', theme);
         }};
     </script>
